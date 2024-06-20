@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/messages.css">
+{% endblock %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card iq-border-radius-20">
+            <div class="card-body">
+
+                <input type="hidden" id="logged-in-user" value="{{ user.id }}">
+                {% for thread in Threads %}
+                <div class="row">
+                    <div class="messages-wrapper {% if forloop.first %}hide is_active{% else %}hide{% endif %}"
+                        chat-id="chat_{{ thread.id }}" other-user-id="
+            {% if thread.first_person == user %}
+                {{ thread.second_person.id }}
+            {% else %}
+                {{ thread.first_person.id }}
+            {% endif %}">
+
+                        {% if thread.first_person == user %}
+                        {% with profile_user=thread.second_person %}
+                        <a class="d-flex align-items-center mb-4" href="{% url 'profile' profile_user.profile.id %}">
+                            <div class="iq-profile-avatar status-online">
+                                <img class="rounded-circle avatar-50" src="../assets/images/user/01.jpg" alt="">
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">
+                                    {{ profile_user.username }}
+                                </h6>
+
+                            </div>
+                        </a>
+                        {% endwith %}
+                        {% else %}
+                        {% with profile_user=thread.first_person %}
+                        <a class="d-flex align-items-center mb-4" href="{% url 'profile' profile_user.profile.id %}">
+                            <div class="iq-profile-avatar status-online">
+                                {% if profile_user.profile.image %}
+                                <img class="rounded-circle avatar-50" src="{{profile_user.profile.image.url}}" alt="">
+                                {% else %}
+                                <img class="rounded-circle avatar-50" src="/static/images/user/default_profile.jpeg"
+                                    alt="">
+                                {% endif %}
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">
+                                    {{ profile_user.username }}
+                                </h6>
+
+                            </div>
+                        </a>
+                        {% endwith %}
+                        {% endif %}
+
+                        <div class="card-body msg_card_body">
+                            <!------- messages ------->
+                            {% for chat in thread.chatmessage_thread.all %}
+                            {% if chat.user == user %}
+
+                            <div class="d-flex mb-4 replied">
+                                <div class="msg_cotainer_send">
+                                    {{ chat.message }}
+
+                                </div>
+                                <div class="img_cont_msg">
+                                    <img src="/static/images/user/default_profile.jpeg" alt=""
+                                        class="rounded-circle user_img_msg">
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="d-flex mb-4 received">
+                                <div class="img_cont_msg">
+                                    <img src="/static/images/user/default_profile.jpeg"
+                                        class="rounded-circle user_img_msg">
+                                </div>
+                                <div class="msg_cotainer">
+                                    {{ chat.message }}
+
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+
+
+                            <!------- messages ------->
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <form class="email-form" id="send-message-form">
+
+                    <div class="form-group row justify-content-end">
+
+                        <div class="col-md-10">
+                            <input type="text" id="input-message" class="form-control"
+                                placeholder="Enter message to send">
+                        </div>
+                    </div>
+                    <div class="form-group d-flex flex-wrap align-items-center justify-content-end mb-0">
+                        <div class="send-btn pl-3 mb-2">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+<script src="/static/js/messages.js"></script>
+
+{% endblock %}

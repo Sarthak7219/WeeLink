@@ -1,0 +1,92 @@
+
+.msg_card_body {
+  overflow-y: auto;
+  max-height: 65%;
+  padding-bottom: 20px;
+  color: white;
+}
+
+.user_img_msg {
+  height: 40px;
+  width: 40px;
+  border: 1.5px solid #f5f6fa;
+}
+
+.img_cont_msg {
+  height: 40px;
+  width: 40px;
+}
+
+
+
+.msg_cotainer {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 10px;
+  border-radius: 25px;
+  background-color: #82ccdd;
+  padding: 10px;
+  position: relative;
+  min-width: 70px;
+  text-align: center;
+}
+.msg_cotainer_send {
+  min-width: 70px;
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 10px;
+  border-radius: 25px;
+  background-color: #78e08f;
+  padding: 10px;
+  position: relative;
+}
+.msg_time {
+  position: absolute;
+  left: 0;
+  bottom: -15px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+}
+.msg_time_send {
+  position: absolute;
+  right: 0;
+  bottom: -15px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+}
+.msg_head {
+  position: relative;
+}
+
+
+.received {
+  justify-content: flex-start;
+}
+
+.replied {
+  justify-content: flex-end;
+}
+
+
+.is_active{
+  display: block !important;
+}
+
+.hide{
+  display: none;
+}
+
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.msg_card_body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.msg_card_body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+

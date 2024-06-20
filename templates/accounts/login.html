@@ -1,0 +1,39 @@
+{% extends 'accounts/accounts_base.html' %}
+{% block content %}
+
+<div class="sign-in-from">
+    <h1 class="mb-0">Sign in</h1>
+    <p>Enter your username and password to access admin panel.</p>
+    <!-- login.html -->
+    {% if error_message %}
+    <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+    <form class="mt-4" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="form-label" for="id_username">Username</label>
+            <input type="text" class="form-control mb-0" name="username" id="id_username" placeholder="Username"
+                required>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_password">Password</label>
+            <a href="#" class="float-end">Forgot password?</a>
+            <input type="password" class="form-control mb-0" name="password" id="id_password" placeholder="Password"
+                required>
+        </div>
+        <div class="d-inline-block w-100">
+            <div class="form-check d-inline-block mt-2 pt-1">
+                <input type="checkbox" class="form-check-input" id="customCheck11" name="remember">
+                <label class="form-check-label" for="customCheck11">Remember Me</label>
+            </div>
+            <button type="submit" class="btn btn-primary float-end">Sign in</button>
+        </div>
+        <div class="sign-info">
+            <span class="dark-color d-inline-block line-height-2">Don't have an account? <a
+                    href="{% url 'register' %}">Sign up</a></span>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

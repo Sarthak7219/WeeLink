@@ -1,0 +1,44 @@
+{% extends 'accounts/accounts_base.html' %}
+{% block content %}
+
+<div class="sign-in-from">
+    <h1 class="mb-0">Sign Up</h1>
+    <p>Enter your details to register</p>
+    <form class="mt-4" method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+        {{ form.full_name.errors }}
+        <div class="form-group">
+            <label class="form-label" for="full_name">Your Full Name</label>
+            {{ form.full_name }}
+        </div>
+        {{ form.username.errors }}
+        <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            {{ form.username }}
+        </div>
+
+        {{ form.password1.errors }}
+        <div class="form-group">
+            <label class="form-label" for="password1">Password</label>
+            {{ form.password1 }}
+        </div>
+        {{ form.password2.errors }}
+        <div class="form-group">
+            <label class="form-label" for="password2">Confirm Password</label>
+            {{ form.password2 }}
+        </div>
+        <div class="d-inline-block w-100">
+            <button type="submit" class="btn btn-primary float-start w-25">Sign Up</button>
+            <div class="form-check d-inline-block mt-1 ps-0 float-end">
+                <span class="dark-color d-inline-block line-height-2">Already Have Account ? <a
+                        href="{% url 'login' %}">Log
+                        In</a></span>
+
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

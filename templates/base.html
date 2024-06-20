@@ -1,0 +1,351 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <title>Weelink</title>
+
+   <link rel="shortcut icon" href="/static/images/favicon.ico" />
+   <link rel="stylesheet" href="/static/css/libs.min.css">
+   <link rel="stylesheet" href="/static/css/socialv.css?v=4.0.0">
+   <link rel="stylesheet" href="/static/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+   <link rel="stylesheet" href="/static/vendor/remixicon/fonts/remixicon.css">
+   <link rel="stylesheet" href="/static/vendor/vanillajs-datepicker/dist/css/datepicker.min.css">
+   <link rel="stylesheet" href="/static/vendor/font-awesome-line-awesome/css/all.min.css">
+   <link rel="stylesheet" href="/static/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
+   {% block extra_css %}
+   {% endblock %}
+
+</head>
+
+<body class="  ">
+   <!-- loader Start -->
+   <div id="loading">
+      <div id="loading-center">
+      </div>
+   </div>
+   <!-- loader END -->
+   <!-- Wrapper Start -->
+   <div class="wrapper">
+      <div class="iq-sidebar  sidebar-default ">
+         <div id="sidebar-scrollbar">
+            <nav class="iq-sidebar-menu">
+               <ul id="iq-sidebar-toggle" class="iq-menu">
+                  <li class="active">
+                     <a href="{% url 'home' %}" class=" ">
+                        <i class="las la-newspaper"></i><span>Home</span>
+                     </a>
+                  </li>
+                  <li class="">
+                     <a href="{% url 'profile' request.user.profile.id %}" class=" ">
+                        <i class="las la-user"></i><span>Profile</span>
+                     </a>
+                  </li>
+
+                  <li class=" ">
+                     <a href="{% url 'chatroom' %}">
+                        <i class="ri-mail-line"></i><span>Messages</span><i
+                           class="ri-arrow-right-s-line iq-arrow-right"></i>
+                     </a>
+
+                  </li>
+
+               </ul>
+            </nav>
+            <div class="p-5"></div>
+         </div>
+      </div>
+
+
+      <div class="iq-top-navbar">
+         <div class="iq-navbar-custom">
+            <nav class="navbar navbar-expand-lg navbar-light p-0">
+               <div class="iq-navbar-logo d-flex justify-content-between">
+                  <a href="{% url 'home' %}">
+                     <!-- <img src="/static/images/logo.png" class="img-fluid" alt=""> -->
+                     <span>WeeLink</span>
+                  </a>
+                  <div class="iq-menu-bt align-self-center">
+                     <div class="wrapper-menu">
+                        <div class="main-circle"><i class="ri-menu-line"></i></div>
+                     </div>
+                  </div>
+               </div>
+               <div class="iq-search-bar device-search">
+                  <form action="#" class="searchbox" method="get">
+                     <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                     <input type="text" class="text search-input" placeholder="Search profiles..." id="search-input">
+                  </form>
+                  <div id="search-results" class="list-group mt-2">
+
+                  </div>
+               </div>
+               <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                  aria-label="Toggle navigation">
+                  <i class="ri-menu-3-line"></i>
+               </button>
+               <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav  ms-auto navbar-list">
+                     <li>
+                        <a href="{% url 'home' %}" class="  d-flex align-items-center">
+                           <i class="ri-home-line"></i>
+                        </a>
+                     </li>
+
+
+                     <li class="nav-item dropdown">
+                        <a href="{% url 'chatroom' %}" class="dropdown-toggle" id="mail-drop" data-bs-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                           <i class="ri-mail-line"></i>
+                        </a>
+                        <div class="sub-drop dropdown-menu" aria-labelledby="mail-drop">
+                           <div class="card shadow-none m-0">
+                              <div class="card-header d-flex justify-content-between bg-primary">
+                                 <div class="header-title bg-primary">
+                                    <h5 class="mb-0 text-white">All Message</h5>
+                                 </div>
+                                 <small class="badge bg-light text-dark">4</small>
+                              </div>
+                              <div class="card-body p-0 ">
+                                 <a href="#" class="iq-sub-card">
+                                    <div class="d-flex  align-items-center">
+                                       <div class="">
+                                          <img class="avatar-40 rounded" src="/static/images/user/01.jpg" alt="">
+                                       </div>
+                                       <div class=" w-100 ms-3">
+                                          <h6 class="mb-0 ">Bni Emma Watson</h6>
+                                          <small class="float-left font-size-12">13 Jun</small>
+                                       </div>
+                                    </div>
+                                 </a>
+                                 <a href="#" class="iq-sub-card">
+                                    <div class="d-flex align-items-center">
+                                       <div class="">
+                                          <img class="avatar-40 rounded" src="/static/images/user/02.jpg" alt="">
+                                       </div>
+                                       <div class="ms-3">
+                                          <h6 class="mb-0 ">Lorem Ipsum Watson</h6>
+                                          <small class="float-left font-size-12">20 Apr</small>
+                                       </div>
+                                    </div>
+                                 </a>
+                                 <a href="#" class="iq-sub-card">
+                                    <div class="d-flex align-items-center">
+                                       <div class="">
+                                          <img class="avatar-40 rounded" src="/static/images/user/03.jpg" alt="">
+                                       </div>
+                                       <div class="ms-3">
+                                          <h6 class="mb-0 ">Why do we use it?</h6>
+                                          <small class="float-left font-size-12">30 Jun</small>
+                                       </div>
+                                    </div>
+                                 </a>
+                                 <a href="#" class="iq-sub-card">
+                                    <div class="d-flex align-items-center">
+                                       <div class="">
+                                          <img class="avatar-40 rounded" src="/static/images/user/04.jpg" alt="">
+                                       </div>
+                                       <div class="ms-3">
+                                          <h6 class="mb-0 ">Variations Passages</h6>
+                                          <small class="float-left font-size-12">12 Sep</small>
+                                       </div>
+                                    </div>
+                                 </a>
+                                 <a href="#" class="iq-sub-card">
+                                    <div class="d-flex align-items-center">
+                                       <div class="">
+                                          <img class="avatar-40 rounded" src="/static/images/user/05.jpg" alt="">
+                                       </div>
+                                       <div class="ms-3">
+                                          <h6 class="mb-0 ">Lorem Ipsum generators</h6>
+                                          <small class="float-left font-size-12">5 Dec</small>
+                                       </div>
+                                    </div>
+                                 </a>
+                              </div>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="nav-item dropdown">
+                        <a href="#" class="   d-flex align-items-center dropdown-toggle" id="drop-down-arrow"
+                           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           {% if request.user.profile.image %}
+                           <img src="{{request.user.profile.image.url}}" class="img-fluid rounded-circle me-3"
+                              alt="user">
+                           {% else %}
+                           <img src="/static/images/user/default_profile.jpeg" class="img-fluid rounded-circle me-3"
+                              alt="user">
+                           {% endif %}
+                           <div class="caption">
+                              <h6 class="mb-0 line-height">{{request.user.username|upper}}</h6>
+                           </div>
+                        </a>
+                        <div class="sub-drop dropdown-menu caption-menu" aria-labelledby="drop-down-arrow">
+                           <div class="card shadow-none m-0">
+                              <div class="card-header  bg-primary">
+                                 <div class="header-title">
+                                    <h5 class="mb-0 text-white">Hello {{request.user.username|upper}}</h5>
+
+                                 </div>
+                              </div>
+                              <div class="card-body p-0 ">
+                                 <a href="{% url 'profile' request.user.profile.id %}"
+                                    class="iq-sub-card iq-bg-primary-hover">
+                                    <div class="d-flex align-items-center">
+                                       <div class="rounded card-icon bg-soft-primary">
+                                          <i class="ri-file-user-line"></i>
+                                       </div>
+                                       <div class="ms-3">
+                                          <h6 class="mb-0 ">My Profile</h6>
+                                          <p class="mb-0 font-size-12">View personal profile details.</p>
+                                       </div>
+                                    </div>
+                                 </a>
+                                 <a href="../app/profile-edit.html" class="iq-sub-card iq-bg-warning-hover">
+                                    <div class="d-flex align-items-center">
+                                       <div class="rounded card-icon bg-soft-warning">
+                                          <i class="ri-profile-line"></i>
+                                       </div>
+                                       <div class="ms-3">
+                                          <h6 class="mb-0 ">Edit Profile</h6>
+                                          <p class="mb-0 font-size-12">Modify your personal details.</p>
+                                       </div>
+                                    </div>
+                                 </a>
+
+                                 <div class="d-inline-block w-100 text-center p-3">
+                                    <a class="btn btn-primary iq-sign-btn" href="{% url 'logout' %}" role="button">Sign
+                                       out<i class="ri-login-box-line ms-2"></i></a>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </nav>
+         </div>
+      </div>
+
+
+      <div class="right-sidebar-mini right-sidebar">
+         <div class="right-sidebar-panel p-0">
+            <h4 class="mt-2 mb-3 ms-2">Messages</h4>
+            {% if messages %}
+            <ul class="messages p-1 bg-soft-primary br-5 rounded">
+               {% for message in messages %}
+               <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+                  </li>
+                  {% endfor %}
+            </ul>
+            {% endif %}
+            <div class="card shadow-none">
+               <div class="card-body p-0">
+                  <div class="media-height p-3" data-scrollbar="init">
+
+                     <!-- Display all the profile followed by the user -->
+                     {% if Threads %}
+                     {% for thread in Threads %}
+                     <a href="{% url 'chatroom'  %}" class="{% if forloop.first %}active{% endif %} contact-li"
+                        chat-id="chat_{{ thread.id }}">
+                        <div class="d-flex align-items-center mb-4">
+                           <div class="iq-profile-avatar status-online">
+                              {% if thread.first_person == user %}
+
+                              {% if thread.second_person.image %}
+                              <img class="rounded-circle avatar-50" src="{{ thread.second_person.image }}" alt=""
+                                 style="object-fit: cover;">
+                              {% else %}
+                              <img class="rounded-circle avatar-50" src="/static/images/user/default_profile.jpeg"
+                                 alt="" style="object-fit: cover;">
+                              {% endif %}
+                              {% else %}
+                              {% if thread.first_person.image %}
+                              <img class="rounded-circle avatar-50" src="{{ thread.first_person.image }}" alt=""
+                                 style="object-fit: cover;">
+                              {% else %}
+                              <img class="rounded-circle avatar-50" src="/static/images/user/default_profile.jpeg"
+                                 alt="" style="object-fit: cover;">
+                              {% endif %}
+                              {% endif %}
+
+
+                           </div>
+                           <div class="ms-3">
+                              <h6 class="mb-0">
+                                 {% if thread.first_person == user %}
+                                 {{ thread.second_person.username }}
+                                 {% else %}
+                                 {{ thread.first_person.username }}
+                                 {% endif %}
+                              </h6>
+                              <p class="mb-0">{{ thread.latest_message }}</p>
+                           </div>
+                        </div>
+                     </a>
+                     {% empty %}
+                     <p>No Chats</p>
+                     {% endfor %}
+                     {% endif %}
+
+                  </div>
+                  <div class="right-sidebar-toggle bg-primary text-white mt-3">
+                     <i class="ri-arrow-left-line side-left-icon"></i>
+                     <i class="ri-arrow-right-line side-right-icon"><span class="ms-3 d-inline-block">Close
+                           Menu</span></i>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+      </div>
+
+
+      <div id="content-page" class="content-page">
+         <div class="container">
+
+            {% block content %}
+
+            {% endblock %}
+
+         </div>
+      </div>
+
+
+   </div>
+   <!-- Wrapper End-->
+   <footer class="iq-footer bg-white">
+
+   </footer> <!-- Backend Bundle JavaScript -->
+
+
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script src="/static/js/libs.min.js"></script>
+   <!-- slider JavaScript -->
+   <script src="/static/js/slider.js"></script>
+   <!-- masonry JavaScript -->
+   <script src="/static/js/masonry.pkgd.min.js"></script>
+   <!-- SweetAlert JavaScript -->
+   <script src="/static/js/enchanter.js"></script>
+   <!-- SweetAlert JavaScript -->
+   <script src="/static/js/sweetalert.js"></script>
+   <!-- app JavaScript -->
+   <script src="/static/js/charts/weather-chart.js"></script>
+   <script src="/static/js/app.js"></script>
+   <script src="../vendor/vanillajs-datepicker/dist/js/datepicker.min.js"></script>
+   <script src="/static/js/lottie.js"></script>
+   <script src="/static/js/search-profiles.js"></script>
+   {% block extra_scripts %}
+   {% endblock %}
+
+   <!-- offcanvas start -->
+
+
+</body>
+
+</html>
