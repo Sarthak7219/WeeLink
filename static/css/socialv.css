@@ -25242,15 +25242,18 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
 #search-results {
   position: absolute;
   top: 100%;
-  left: 0;
-  right: 0;
+  display: none;
   z-index: 1000;
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 0 0 4px 4px;
-  display: none;
-  max-height: 200px;
+  width: 30%;
+  max-height: 300px;
   overflow-y: auto;
+}
+
+#search-results.visible{
+  display: block;
 }
 
 #search-results .list-group-item {
@@ -25260,3 +25263,8 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
 .row{
   justify-content: center;
 }
+
+.no-before .iq-profile-avatar::before {
+    content: none;
+}
+

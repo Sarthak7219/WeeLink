@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import messages_page
+from .views import *
 urlpatterns = [
-    path('', messages_page, name='chatroom'),
+    path('<int:thread_id>/', messages_page, name='chatroom'),
 ]

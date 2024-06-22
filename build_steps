@@ -1,3 +1,0 @@
-S-1: Extend django user model. Write code for creation of profile automatically when user is created using django signals. This profile follows itself after creation so as to see hi own posts.
-
-S-2: Setup the templates, static folders, routes

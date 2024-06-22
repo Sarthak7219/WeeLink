@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block search_results %}
+<div class="card shadow-none">
+    <div class="card-body p-0">
+        <div class="media-height p-3" data-scrollbar="init">
+
+
+            <p>Search results for '{{username}}'</p>
+            {% if search_results %}
+            {% for user in search_results %}
+            <a href="{% url 'profile' user.profile.id  %}">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="iq-profile-avatar">
+
+
+                        {% if user.profile.image %}
+                        <img class="rounded-circle avatar-50" src="{{ user.profile.image.url }}" alt=""
+                            style="object-fit: cover;">
+                        {% else %}
+                        <img class="rounded-circle avatar-50" src="/static/images/user/default_profile.jpeg" alt=""
+                            style="object-fit: cover;">
+                        {% endif %}
+
+                    </div>
+                    <div class="ms-3">
+                        <h6 class="mb-0">
+                            {{user.username}}
+                        </h6>
+
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <p>No Profile found!</p>
+            {% endfor %}
+            {% endif %}
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

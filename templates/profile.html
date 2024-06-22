@@ -33,7 +33,7 @@
                         class="social-data-block d-flex align-items-center justify-content-between list-inline p-0 m-0">
                         <li class="text-center ps-3">
                            <h6>Posts</h6>
-                           <p class="mb-0">0</p>
+                           <p class="mb-0">{{num_posts}}</p>
                         </li>
                         <li class="text-center ps-3">
                            <h6>Followers</h6>
@@ -45,22 +45,27 @@
                         </li>
                      </ul>
                   </div>
-                  <form method="post">
-                     {% csrf_token %}
-                     {% if profile in user_followed_profiles %}
-                     <button name="follow" value="unfollow" class="btn btn-secondary d-block mt-3"
-                        style="width: 94.23px !important;">
-                        Following
-                     </button>
-                     {% elif is_user == True %}
+                  {% if not is_user %}
+                  <div class="d-flex">
+                     <a href="{% url 'chatroom' thread_id  %}" class="btn btn-success d-block mt-3 me-3"
+                        id="message-btn" data-user-id="{{ profile.user.id }}" style="color: #fff;">Message</a>
+                     <form method="post">
+                        {% csrf_token %}
 
-                     {% else %}
-                     <button name="follow" value="follow" class="btn btn-primary d-block mt-3"
-                        style="width: 94.23px !important;">
-                        Follow
-                     </button>
-                     {% endif %}
-                  </form>
+                        {% if profile in user_followed_profiles %}
+                        <button name="follow" value="unfollow" class="btn btn-secondary d-block mt-3"
+                           style="width: 94.23px !important;">
+                           Following
+                        </button>
+                        {% else %}
+                        <button name="follow" value="follow" class="btn btn-primary d-block mt-3"
+                           style="width: 94.23px !important;">
+                           Follow
+                        </button>
+                        {% endif %}
+                     </form>
+                  </div>
+                  {% endif %}
                </div>
             </div>
          </div>
@@ -73,7 +78,7 @@
                <ul class="nav nav-pills d-flex align-items-center justify-content-center profile-feed-items p-0 m-0">
                   <li class="nav-item col-12 col-sm-3 p-0">
                      <a class="nav-link active" href="#pills-timeline-tab" data-bs-toggle="pill"
-                        data-bs-target="#timeline" role="button">My Posts</a>
+                        data-bs-target="#timeline" role="button">Posts</a>
                   </li>
                   <li class="nav-item col-12 col-sm-3 p-0">
                      <a class="nav-link" href="#pills-about-tab" data-bs-toggle="pill" data-bs-target="#about"
@@ -127,7 +132,7 @@
 
                               </div>
                               <hr>
-                              <ul class=" post-opt-block d-flex list-inline m-0 p-0 flex-wrap">
+                              <ul class=" post-opt-block d-flex list-inline m-0 p-0 flex-wrap ">
                                  <input type="file" id="post-image" name="post-image" id="post-image" accept="image/*">
                                  <label for="post-image"
                                     class="bg-soft-primary rounded p-2 pointer d-flex align-items-center me-3 mb-md-0 mb-2">
@@ -136,33 +141,10 @@
                                     Photo/Video
                                  </label>
 
-                                 <li class="bg-soft-primary rounded p-2 pointer d-flex align-items-center me-3">
-                                    <img src="/static/images/small/09.png" alt="icon" class="img-fluid me-2">
-                                    Feeling/Activity
-                                 </li>
-                                 <li class="bg-soft-primary rounded p-2 pointer text-center me-3">
-                                    <div class="card-header-toolbar d-flex align-items-center">
-                                       <div class="dropdown">
-                                          <div class="dropdown-toggle" id="post-option" data-bs-toggle="dropdown">
-                                             <i class="ri-more-fill h4"></i>
-                                          </div>
-                                          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="post-option">
-                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#post-modal">Check in</a>
-                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#post-modal">Live Video</a>
-                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#post-modal">Gif</a>
-                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#post-modal">Watch Party</a>
-                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#post-modal">Play with Friend</a>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </li>
-                                 <button class="bg-primary rounded p-2 pointer text-center"
-                                    style="border: none; display: block; flex: 1; color: white;" type="submit">Create
+
+
+                                 <button class="bg-primary rounded p-2 pointer text-center w-25"
+                                    style="border: none; display: block;  color: white;" type="submit">Create
                                     Post</button>
                               </ul>
                            </div>
@@ -187,6 +169,7 @@
                                              <p class="ms-1 mb-0 d-inline-block">Add New Post</p>
                                              <p class="mb-0">{{post.created_at}}</p>
                                           </div>
+                                          {% if is_user %}
                                           <div class="card-post-toolbar">
                                              <div class="dropdown">
                                                 <span class="dropdown-toggle" data-bs-toggle="dropdown"
@@ -222,6 +205,7 @@
                                                 </form>
                                              </div>
                                           </div>
+                                          {% endif %}
                                        </div>
                                     </div>
                                  </div>
@@ -242,124 +226,27 @@
                                        <div class="d-flex align-items-center">
                                           <div class="like-data">
                                              <div class="dropdown">
-                                                <span class="dropdown-toggle" data-bs-toggle="dropdown"
-                                                   aria-haspopup="true" aria-expanded="false" role="button">
-                                                   <img src="/static/images/icon/01.png" class="img-fluid" alt="">
-                                                </span>
-                                                <div class="dropdown-menu py-2">
-                                                   <a class="ms-2 me-2" href="#" data-bs-toggle="tooltip"
-                                                      data-bs-placement="top" title="Like"><img
-                                                         src="/static/images/icon/01.png" class="img-fluid" alt=""></a>
-                                                   <a class="me-2" href="#" data-bs-toggle="tooltip"
-                                                      data-bs-placement="top" title="Love"><img
-                                                         src="/static/images/icon/02.png" class="img-fluid" alt=""></a>
-                                                   <a class="me-2" href="#" data-bs-toggle="tooltip"
-                                                      data-bs-placement="top" title="Happy"><img
-                                                         src="/static/images/icon/03.png" class="img-fluid" alt=""></a>
-                                                   <a class="me-2" href="#" data-bs-toggle="tooltip"
-                                                      data-bs-placement="top" title="HaHa"><img
-                                                         src="/static/images/icon/04.png" class="img-fluid" alt=""></a>
-                                                   <a class="me-2" href="#" data-bs-toggle="tooltip"
-                                                      data-bs-placement="top" title="Think"><img
-                                                         src="/static/images/icon/05.png" class="img-fluid" alt=""></a>
-                                                   <a class="me-2" href="#" data-bs-toggle="tooltip"
-                                                      data-bs-placement="top" title="Sade"><img
-                                                         src="/static/images/icon/06.png" class="img-fluid" alt=""></a>
-                                                   <a class="me-2" href="#" data-bs-toggle="tooltip"
-                                                      data-bs-placement="top" title="Lovely"><img
-                                                         src="/static/images/icon/07.png" class="img-fluid" alt=""></a>
-                                                </div>
-                                             </div>
-                                          </div>
-                                          <div class="total-like-block ms-2 me-3">
-                                             <div class="dropdown">
-                                                <span class="dropdown-toggle" data-bs-toggle="dropdown"
-                                                   aria-haspopup="true" aria-expanded="false" role="button">
 
-                                                </span>
-                                                <div class="dropdown-menu">
-                                                   <a class="dropdown-item" href="#">Max Emum</a>
-                                                   <a class="dropdown-item" href="#">Bill Yerds</a>
-                                                   <a class="dropdown-item" href="#">Hap E. Birthday</a>
-                                                   <a class="dropdown-item" href="#">Tara Misu</a>
-                                                   <a class="dropdown-item" href="#">Midge Itz</a>
-                                                   <a class="dropdown-item" href="#">Sal Vidge</a>
-                                                   <a class="dropdown-item" href="#">Other</a>
-                                                </div>
+                                                <img src="/static/images/icon/01.png" class="img-fluid" alt="">
+
+
                                              </div>
                                           </div>
+
                                        </div>
                                        <div class="total-comment-block">
-                                          <div class="dropdown">
-                                             <span class="dropdown-toggle" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false" role="button">
-                                                20 Comment
-                                             </span>
-                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">Max Emum</a>
-                                                <a class="dropdown-item" href="#">Bill Yerds</a>
-                                                <a class="dropdown-item" href="#">Hap E. Birthday</a>
-                                                <a class="dropdown-item" href="#">Tara Misu</a>
-                                                <a class="dropdown-item" href="#">Midge Itz</a>
-                                                <a class="dropdown-item" href="#">Sal Vidge</a>
-                                                <a class="dropdown-item" href="#">Other</a>
-                                             </div>
+                                          <div class="dropdown ms-3  ">
+
+                                             20 Comment
+
+
                                           </div>
                                        </div>
                                     </div>
-                                    <div class="share-block d-flex align-items-center feather-icon mt-2 mt-md-0">
-                                       <a href="#" data-bs-toggle="offcanvas" data-bs-target="#share-btn"
-                                          aria-controls="share-btn"><i class="ri-share-line"></i>
-                                          <span class="ms-1">99 Share</span></a>
-                                    </div>
+
                                  </div>
                                  <hr>
-                                 <ul class="post-comments p-0 m-0">
-                                    <li class="mb-2">
-                                       <div class="d-flex flex-wrap">
-                                          <div class="user-img">
-                                             <img src="/static/images/user/02.jpg" alt="userimg"
-                                                class="avatar-35 rounded-circle img-fluid">
-                                          </div>
-                                          <div class="comment-data-block ms-3">
-                                             <h6>Monty Carlo</h6>
-                                             <p class="mb-0">Lorem ipsum dolor sit amet</p>
-                                             <div class="d-flex flex-wrap align-items-center comment-activity">
-                                                <a href="#">like</a>
-                                                <a href="#">reply</a>
-                                                <a href="#">translate</a>
-                                                <span> 5 min </span>
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </li>
-                                    <li>
-                                       <div class="d-flex flex-wrap">
-                                          <div class="user-img">
-                                             <img src="/static/images/user/03.jpg" alt="userimg"
-                                                class="avatar-35 rounded-circle img-fluid">
-                                          </div>
-                                          <div class="comment-data-block ms-3">
-                                             <h6>Paul Molive</h6>
-                                             <p class="mb-0">Lorem ipsum dolor sit amet</p>
-                                             <div class="d-flex flex-wrap align-items-center comment-activity">
-                                                <a href="#">like</a>
-                                                <a href="#">reply</a>
-                                                <a href="#">translate</a>
-                                                <span> 5 min </span>
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </li>
-                                 </ul>
-                                 <form class="comment-text d-flex align-items-center mt-3" action="javascript:void(0);">
-                                    <input type="text" class="form-control rounded" placeholder="Enter Your Comment">
-                                    <div class="comment-attagement d-flex">
-                                       <a href="#"><i class="ri-link me-3"></i></a>
-                                       <a href="#"><i class="ri-user-smile-line me-3"></i></a>
-                                       <a href="#"><i class="ri-camera-line me-3"></i></a>
-                                    </div>
-                                 </form>
+
                               </div>
                            </div>
                            <hr>
@@ -376,7 +263,7 @@
          <div class="tab-pane fade" id="about" role="tabpanel">
             <div class="card">
                <div class="card-body">
-                  <div class="row">
+                  <div class="row justify-content-start">
 
                      <div class="col-md-9 ps-4">
                         <div class="tab-content">
@@ -384,25 +271,17 @@
                               aria-labelledby="v-pills-basicinfo-tab">
                               <h4>Contact Information</h4>
                               <hr>
-                              <div class="row">
+                              <div class="row ">
                                  <div class="col-3">
                                     <h6>Email</h6>
                                  </div>
                                  <div class="col-9">
-                                    <p class="mb-0">{{profile.user.email}}</p>
+                                    <p class="mb-0">example@gmail.com</p>
                                  </div>
-                                 <div class="col-3">
-                                    <h6>Mobile</h6>
-                                 </div>
-                                 <div class="col-9">
-                                    <p class="mb-0">(001) 4544 565 456</p>
-                                 </div>
-                                 <div class="col-3">
-                                    <h6>Address</h6>
-                                 </div>
-                                 <div class="col-9">
-                                    <p class="mb-0">United States of America</p>
-                                 </div>
+
+
+
+
                               </div>
                               <h4 class="mt-3">Websites and Social Links</h4>
                               <hr>
@@ -411,13 +290,13 @@
                                     <h6>Website</h6>
                                  </div>
                                  <div class="col-9">
-                                    <p class="mb-0">www.bootstrap.com</p>
+                                    <p class="mb-0">www.example.com</p>
                                  </div>
                                  <div class="col-3">
-                                    <h6>Social Link</h6>
+                                    <h6>LinkedIn</h6>
                                  </div>
                                  <div class="col-9">
-                                    <p class="mb-0">www.bootstrap.com</p>
+                                    <p class="mb-0">www.example.com</p>
                                  </div>
                               </div>
                               <h4 class="mt-3">Basic Information</h4>
@@ -429,234 +308,24 @@
                                  <div class="col-9">
                                     <p class="mb-0">24 January</p>
                                  </div>
-                                 <div class="col-3">
-                                    <h6>Birth Year</h6>
-                                 </div>
-                                 <div class="col-9">
-                                    <p class="mb-0">1994</p>
-                                 </div>
+
                                  <div class="col-3">
                                     <h6>Gender</h6>
                                  </div>
                                  <div class="col-9">
-                                    <p class="mb-0">Female</p>
+                                    <p class="mb-0">Male</p>
                                  </div>
                                  <div class="col-3">
-                                    <h6>interested in</h6>
+                                    <h6>Age</h6>
                                  </div>
                                  <div class="col-9">
-                                    <p class="mb-0">Designing</p>
+                                    <p class="mb-0">20</p>
                                  </div>
-                                 <div class="col-3">
-                                    <h6>language</h6>
-                                 </div>
-                                 <div class="col-9">
-                                    <p class="mb-0">English, French</p>
-                                 </div>
+
+
                               </div>
                            </div>
-                           <div class="tab-pane fade" id="v-pills-family" role="tabpanel">
-                              <h4 class="mb-3">Relationship</h4>
-                              <ul class="suggestions-lists m-0 p-0">
-                                 <li class="d-flex mb-4 align-items-center">
-                                    <div class="user-img img-fluid"><i class="ri-add-fill"></i></div>
-                                    <div class="media-support-info ms-3">
-                                       <h6>Add Your Relationship Status</h6>
-                                    </div>
-                                 </li>
-                              </ul>
-                              <h4 class="mt-3 mb-3">Family Members</h4>
-                              <ul class="suggestions-lists m-0 p-0">
-                                 <li class="d-flex mb-4 align-items-center">
-                                    <div class="user-img img-fluid"><i class="ri-add-fill"></i></div>
-                                    <div class="media-support-info ms-3">
-                                       <h6>Add Family Members</h6>
-                                    </div>
-                                 </li>
-                                 <li class="d-flex mb-4 align-items-center justify-content-between">
-                                    <div class="user-img img-fluid"><img src="/static/images/user/01.jpg"
-                                          alt="story-img" class="rounded-circle avatar-40"></div>
-                                    <div class="w-100">
-                                       <div class="d-flex justify-content-between">
-                                          <div class="ms-3">
-                                             <h6>Paul Molive</h6>
-                                             <p class="mb-0">Brothe</p>
-                                          </div>
-                                          <div class="edit-relation"><a href="#"><i
-                                                   class="ri-edit-line me-2"></i>Edit</a></div>
-                                       </div>
-                                    </div>
-                                 </li>
-                                 <li class="d-flex justify-content-between mb-4  align-items-center">
-                                    <div class="user-img img-fluid"><img src="/static/images/user/02.jpg"
-                                          alt="story-img" class="rounded-circle avatar-40"></div>
-                                    <div class="w-100">
-                                       <div class="d-flex flex-wrap justify-content-between">
-                                          <div class=" ms-3">
-                                             <h6>Anna Mull</h6>
-                                             <p class="mb-0">Sister</p>
-                                          </div>
-                                          <div class="edit-relation"><a href="#"><i
-                                                   class="ri-edit-line me-2"></i>Edit</a></div>
-                                       </div>
-                                    </div>
-                                 </li>
-                                 <li class="d-flex mb-4 align-items-center justify-content-between">
-                                    <div class="user-img img-fluid"><img src="/static/images/user/03.jpg"
-                                          alt="story-img" class="rounded-circle avatar-40"></div>
-                                    <div class="w-100">
-                                       <div class="d-flex justify-content-between">
-                                          <div class="ms-3">
-                                             <h6>Paige Turner</h6>
-                                             <p class="mb-0">Cousin</p>
-                                          </div>
-                                          <div class="edit-relation"><a href="#"><i
-                                                   class="ri-edit-line me-2"></i>Edit</a></div>
-                                       </div>
-                                    </div>
-                                 </li>
-                              </ul>
-                           </div>
-                           <div class="tab-pane fade" id="v-pills-work-tab" role="tabpanel"
-                              aria-labelledby="v-pills-work-tab">
-                              <h4 class="mb-3">Work</h4>
-                              <ul class="suggestions-lists m-0 p-0">
-                                 <li class="d-flex justify-content-between mb-4  align-items-center">
-                                    <div class="user-img img-fluid"><i class="ri-add-fill"></i></div>
-                                    <div class="ms-3">
-                                       <h6>Add Work Place</h6>
-                                    </div>
-                                 </li>
-                                 <li class="d-flex mb-4 align-items-center justify-content-between">
-                                    <div class="user-img img-fluid"><img src="/static/images/user/01.jpg"
-                                          alt="story-img" class="rounded-circle avatar-40"></div>
-                                    <div class="w-100">
-                                       <div class="d-flex justify-content-between">
-                                          <div class="ms-3">
-                                             <h6>Themeforest</h6>
-                                             <p class="mb-0">Web Designer</p>
-                                          </div>
-                                          <div class="edit-relation"><a href="#"><i
-                                                   class="ri-edit-line me-2"></i>Edit</a></div>
-                                       </div>
-                                    </div>
-                                 </li>
-                                 <li class="d-flex mb-4 align-items-center justify-content-between">
-                                    <div class="user-img img-fluid"><img src="/static/images/user/02.jpg"
-                                          alt="story-img" class="rounded-circle avatar-40"></div>
-                                    <div class="w-100">
-                                       <div class="d-flex flex-wrap justify-content-between">
-                                          <div class="ms-3">
-                                             <h6>iqonicdesign</h6>
-                                             <p class="mb-0">Web Developer</p>
-                                          </div>
-                                          <div class="edit-relation"><a href="#"><i
-                                                   class="ri-edit-line me-2"></i>Edit</a></div>
-                                       </div>
-                                    </div>
-                                 </li>
-                                 <li class="d-flex mb-4 align-items-center justify-content-between">
-                                    <div class="user-img img-fluid"><img src="/static/images/user/03.jpg"
-                                          alt="story-img" class="rounded-circle avatar-40"></div>
-                                    <div class="w-100">
-                                       <div class="d-flex flex-wrap justify-content-between">
-                                          <div class="ms-3">
-                                             <h6>W3school</h6>
-                                             <p class="mb-0">Designer</p>
-                                          </div>
-                                          <div class="edit-relation"><a href="#"><i
-                                                   class="ri-edit-line me-2"></i>Edit</a></div>
-                                       </div>
-                                    </div>
-                                 </li>
-                              </ul>
-                              <h4 class="mb-3">Professional Skills</h4>
-                              <ul class="suggestions-lists m-0 p-0">
-                                 <li class="d-flex mb-4 align-items-center">
-                                    <div class="user-img img-fluid"><i class="ri-add-fill"></i></div>
-                                    <div class="ms-3">
-                                       <h6>Add Professional Skills</h6>
-                                    </div>
-                                 </li>
-                              </ul>
-                              <h4 class="mt-3 mb-3">College</h4>
-                              <ul class="suggestions-lists m-0 p-0">
-                                 <li class="d-flex mb-4 align-items-center">
-                                    <div class="user-img img-fluid"><i class="ri-add-fill"></i></div>
-                                    <div class="ms-3">
-                                       <h6>Add College</h6>
-                                    </div>
-                                 </li>
-                                 <li class="d-flex mb-4 align-items-center">
-                                    <div class="user-img img-fluid"><img src="/static/images/user/01.jpg"
-                                          alt="story-img" class="rounded-circle avatar-40"></div>
-                                    <div class="w-100">
-                                       <div class="d-flex flex-wrap justify-content-between">
-                                          <div class="ms-3">
-                                             <h6>Lorem ipsum</h6>
-                                             <p class="mb-0">USA</p>
-                                          </div>
-                                          <div class="edit-relation"><a href="#"><i
-                                                   class="ri-edit-line me-2"></i>Edit</a></div>
-                                       </div>
-                                    </div>
-                                 </li>
-                              </ul>
-                           </div>
-                           <div class="tab-pane fade" id="v-pills-lived-tab" role="tabpanel"
-                              aria-labelledby="v-pills-lived-tab">
-                              <h4 class="mb-3">Current City and Hometown</h4>
-                              <ul class="suggestions-lists m-0 p-0">
-                                 <li class="d-flex mb-4 align-items-center justify-content-between">
-                                    <div class="user-img img-fluid"><img src="/static/images/user/01.jpg"
-                                          alt="story-img" class="rounded-circle avatar-40"></div>
-                                    <div class="w-100">
-                                       <div class="d-flex flex-wrap justify-content-between">
-                                          <div class="ms-3">
-                                             <h6>Georgia</h6>
-                                             <p class="mb-0">Georgia State</p>
-                                          </div>
-                                          <div class="edit-relation"><a href="#"><i
-                                                   class="ri-edit-line me-2"></i>Edit</a></div>
-                                       </div>
-                                    </div>
-                                 </li>
-                                 <li class="d-flex mb-4 align-items-center justify-content-between">
-                                    <div class="user-img img-fluid"><img src="/static/images/user/02.jpg"
-                                          alt="story-img" class="rounded-circle avatar-40"></div>
-                                    <div class="w-100">
-                                       <div class="d-flex flex-wrap justify-content-between">
-                                          <div class="ms-3">
-                                             <h6>Atlanta</h6>
-                                             <p class="mb-0">Atlanta City</p>
-                                          </div>
-                                          <div class="edit-relation"><a href="#"><i
-                                                   class="ri-edit-line me-2"></i>Edit</a></div>
-                                       </div>
-                                    </div>
-                                 </li>
-                              </ul>
-                              <h4 class="mt-3 mb-3">Other Places Lived</h4>
-                              <ul class="suggestions-lists m-0 p-0">
-                                 <li class="d-flex mb-4 align-items-center">
-                                    <div class="user-img img-fluid"><i class="ri-add-fill"></i></div>
-                                    <div class="ms-3">
-                                       <h6>Add Place</h6>
-                                    </div>
-                                 </li>
-                              </ul>
-                           </div>
-                           <div class="tab-pane fade" id="v-pills-details-tab" role="tabpanel"
-                              aria-labelledby="v-pills-details-tab">
-                              <h4 class="mb-3">About You</h4>
-                              <p>Hi, I’m Bni, I’m 26 and I work as a Web Designer for the iqonicdesign.</p>
-                              <h4 class="mt-3 mb-3">Other Name</h4>
-                              <p>Bini Rock</p>
-                              <h4 class="mt-3 mb-3">Favorite Quotes</h4>
-                              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                 Lorem Ipsum has been the industry's standard dummy text ever since the
-                                 1500s</p>
-                           </div>
+
                         </div>
                      </div>
                   </div>
@@ -670,28 +339,26 @@
                   <div class="friend-list-tab mt-2">
                      <ul
                         class="nav nav-pills d-flex align-items-center justify-content-left friend-list-items p-0 mb-2">
+
+
                         <li>
-                           <a class="nav-link active" data-bs-toggle="pill" href="#pill-all-friends"
-                              data-bs-target="#all-feinds">All Friends</a>
-                        </li>
-                        {% if is_user %}
-                        <li>
-                           <a class="nav-link" data-bs-toggle="pill" href="#pill-followers"
+                           <a class="nav-link active" data-bs-toggle="pill" href="#pill-followers"
                               data-bs-target="#followers">Followers</a>
                         </li>
                         <li>
                            <a class="nav-link" data-bs-toggle="pill" href="#pill-following" data-bs-target="#following">
                               Following</a>
                         </li>
-                        {% endif %}
 
                      </ul>
                      <div class="tab-content">
-                        <div class="tab-pane fade active show" id="all-friends" role="tabpanel">
-                           <div class="card-body p-0">
-                              <div class="row">
-                                 {% for profile in connected_profiles %}
 
+
+
+                        <div class="tab-pane fade active show" id="followers" role="tabpanel">
+                           <div class="card-body p-0">
+                              <div class="row justify-content-start">
+                                 {% for profile in followed_by %}
                                  <div class="col-md-6 col-lg-6 mb-3">
                                     <div class="iq-friendlist-block">
                                        <div class="d-flex align-items-center justify-content-between">
@@ -699,83 +366,34 @@
 
                                           <div class="d-flex align-items-center">
                                              <a href="{% url 'profile' profile.id %}">
-                                                <img src="/static/images/user/05.jpg" alt="profile-img"
-                                                   class="img-fluid">
+
+                                                <img
+                                                   src="{% if profile.image %}{{profile.image.url}}{% else %}/static/images/user/default_profile.jpeg{% endif %}"
+                                                   alt="profile-img" class="img-fluid" style="    width: 127.5px;
+                                                   height: 127.5px;
+                                                   max-width: none;
+                                                   object-fit: cover;">
                                              </a>
-                                             <div class="friend-info ms-3">
+
+                                          </div>
+                                          <div class="d-flex flex-column align-items-start    me-2">
+                                             <div class="friend-info mb-3">
                                                 <h5>{{profile.user.username}}</h5>
-                                                <p class="mb-0">15 friends</p>
-                                             </div>
-                                          </div>
 
-                                          <div class="card-header-toolbar d-flex align-items-center">
-                                             <div class="dropdown">
-                                                {% if profile in followed_profiles %}
-                                                <span class="dropdown-toggle btn btn-secondary me-2"
-                                                   id="dropdownMenuButton01" data-bs-toggle="dropdown"
-                                                   aria-expanded="true" role="button">
-                                                   <i class="ri-check-line me-1 text-white"></i> Following
-                                                </span>
-                                                {% else %}
-                                                <span class="dropdown-toggle btn btn-primary me-2"
-                                                   id="dropdownMenuButton01" data-bs-toggle="dropdown"
-                                                   aria-expanded="true" role="button">
-                                                   <i class="ri-check-line me-1 text-white"></i> Follow
-                                                </span>
-                                                {% endif %}
-                                                <div class="dropdown-menu dropdown-menu-right"
-                                                   aria-labelledby="dropdownMenuButton01">
-                                                   <a class="dropdown-item" href="#">Get Notification</a>
-                                                   <a class="dropdown-item" href="#">Close Friend</a>
-                                                   <a class="dropdown-item" href="#">Unfollow</a>
-                                                   <a class="dropdown-item" href="#">Unfriend</a>
-                                                   <a class="dropdown-item" href="#">Block</a>
-                                                </div>
                                              </div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                                 {% empty %}
-                                 <p>No connections</p>
-                                 {% endfor %}
 
-                              </div>
-                           </div>
-                        </div>
+                                             <div class="card-header-toolbar d-flex align-items-center">
+                                                <div class="dropdown">
+                                                   {% if profile in followed_profiles %}
+                                                   <span class="btn btn-secondary me-2" aria-expanded="true">
+                                                      <i class="ri-check-line me-1 text-white"></i> Following
+                                                   </span>
+                                                   {% else %}
+                                                   <span class="btn btn-primary me-2" aria-expanded="true">
+                                                      <i class="ri-check-line me-1 text-white"></i> Follow
+                                                   </span>
+                                                   {% endif %}
 
-                        {% if is_user %}
-                        <div class="tab-pane fade" id="followers" role="tabpanel">
-                           <div class="card-body p-0">
-                              <div class="row">
-                                 {% for profile in followed_by %}
-                                 <div class="col-md-6 col-lg-6 mb-3">
-                                    <div class="iq-friendlist-block">
-                                       <div class="d-flex align-items-center justify-content-between">
-                                          <div class="d-flex align-items-center">
-                                             <a href="#">
-                                                <img src="/static/images/user/07.jpg" alt="profile-img"
-                                                   class="img-fluid">
-                                             </a>
-                                             <div class="friend-info ms-3">
-                                                <h5>{{profile.user.username}}</h5>
-                                                <p class="mb-0">4 friends</p>
-                                             </div>
-                                          </div>
-                                          <div class="card-header-toolbar d-flex align-items-center">
-                                             <div class="dropdown">
-                                                <span class="dropdown-toggle btn btn-secondary me-2"
-                                                   id="dropdownMenuButton31" data-bs-toggle="dropdown"
-                                                   aria-expanded="true" role="button">
-                                                   <i class="ri-check-line me-1 text-white"></i> Friend
-                                                </span>
-                                                <div class="dropdown-menu dropdown-menu-right"
-                                                   aria-labelledby="dropdownMenuButton31">
-                                                   <a class="dropdown-item" href="#">Get Notification</a>
-                                                   <a class="dropdown-item" href="#">Close Friend</a>
-                                                   <a class="dropdown-item" href="#">Unfollow</a>
-                                                   <a class="dropdown-item" href="#">Unfriend</a>
-                                                   <a class="dropdown-item" href="#">Block</a>
                                                 </div>
                                              </div>
                                           </div>
@@ -790,43 +408,38 @@
                         </div>
                         <div class="tab-pane fade" id="following" role="tabpanel">
                            <div class="card-body p-0">
-                              <div class="row">
+                              <div class="row justify-content-start">
                                  {% for profile in followed_profiles %}
                                  <div class="col-md-6 col-lg-6 mb-3">
                                     <div class="iq-friendlist-block">
                                        <div class="d-flex align-items-center justify-content-between">
+
+
                                           <div class="d-flex align-items-center">
-                                             <a href="#">
-                                                <img src="/static/images/user/05.jpg" alt="profile-img"
-                                                   class="img-fluid">
+                                             <a href="{% url 'profile' profile.id %}">
+                                                <img
+                                                   src="{% if profile.image %}{{profile.image.url}}{% else %}/static/images/user/default_profile.jpeg{% endif %}"
+                                                   alt="profile-img" class="img-fluid" style="    width: 127.5px;
+                                                   height: 127.5px;
+                                                   max-width: none;
+                                                   object-fit: cover;">
                                              </a>
-                                             <div class="friend-info ms-3">
-                                                <h5>{{profile.user.username}}</h5>
-                                                <p class="mb-0">20 friends</p>
-                                             </div>
+
                                           </div>
-                                          <div class="card-header-toolbar d-flex align-items-center">
-                                             <div class="dropdown">
-                                                {% if profile in followed_profiles %}
-                                                <span class="dropdown-toggle btn btn-secondary me-2"
-                                                   id="dropdownMenuButton01" data-bs-toggle="dropdown"
-                                                   aria-expanded="true" role="button">
-                                                   <i class="ri-check-line me-1 text-white"></i> Following
-                                                </span>
-                                                {% else %}
-                                                <span class="dropdown-toggle btn btn-primary me-2"
-                                                   id="dropdownMenuButton01" data-bs-toggle="dropdown"
-                                                   aria-expanded="true" role="button">
-                                                   <i class="ri-check-line me-1 text-white"></i> Follow
-                                                </span>
-                                                {% endif %}
-                                                <div class="dropdown-menu dropdown-menu-right"
-                                                   aria-labelledby="dropdownMenuButton54">
-                                                   <a class="dropdown-item" href="#">Get Notification</a>
-                                                   <a class="dropdown-item" href="#">Close Friend</a>
-                                                   <a class="dropdown-item" href="#">Unfollow</a>
-                                                   <a class="dropdown-item" href="#">Unfriend</a>
-                                                   <a class="dropdown-item" href="#">Block</a>
+                                          <div class="d-flex flex-column align-items-start    me-2">
+                                             <div class="friend-info mb-3">
+                                                <h5>{{profile.user.username}}</h5>
+
+                                             </div>
+
+                                             <div class="card-header-toolbar d-flex align-items-center">
+                                                <div class="dropdown">
+
+                                                   <span class="btn btn-secondary me-2" aria-expanded="true">
+                                                      <i class="ri-check-line me-1 text-white"></i> Following
+                                                   </span>
+
+
                                                 </div>
                                              </div>
                                           </div>
@@ -839,7 +452,7 @@
                               </div>
                            </div>
                         </div>
-                        {% endif %}
+
                      </div>
                   </div>
                </div>
@@ -850,14 +463,7 @@
                <div class="card-body">
                   <h2>Photos</h2>
                   <div class="friend-list-tab mt-2">
-                     <ul
-                        class="nav nav-pills d-flex align-items-center justify-content-left friend-list-items p-0 mb-2">
-                        <li>
-                           <a class="nav-link active" data-bs-toggle="pill" href="#pill-photosofyou"
-                              data-bs-target="#photosofyou">Photos of You</a>
-                        </li>
 
-                     </ul>
                      <div class="tab-content">
                         <div class="tab-pane fade active show" id="photosofyou" role="tabpanel">
                            <div class="card-body p-0">
@@ -892,4 +498,9 @@
 
 </div>
 
+{% endblock %}
+
+{% block extra_scripts %}
+{% csrf_token %}
+<script src="/static/js/create_thread.js"></script>
 {% endblock %}

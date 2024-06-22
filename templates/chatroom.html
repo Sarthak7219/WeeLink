@@ -12,54 +12,30 @@
             <div class="card-body">
 
                 <input type="hidden" id="logged-in-user" value="{{ user.id }}">
-                {% for thread in Threads %}
+
                 <div class="row">
-                    <div class="messages-wrapper {% if forloop.first %}hide is_active{% else %}hide{% endif %}"
-                        chat-id="chat_{{ thread.id }}" other-user-id="
-            {% if thread.first_person == user %}
-                {{ thread.second_person.id }}
-            {% else %}
-                {{ thread.first_person.id }}
-            {% endif %}">
+                    <div class="messages-wrapper hide is_active" chat-id="chat_{{ thread_id }}"
+                        other-user-id="{{second_person.id}}" style="height: fit-content;">
 
-                        {% if thread.first_person == user %}
-                        {% with profile_user=thread.second_person %}
-                        <a class="d-flex align-items-center mb-4" href="{% url 'profile' profile_user.profile.id %}">
-                            <div class="iq-profile-avatar status-online">
-                                <img class="rounded-circle avatar-50" src="../assets/images/user/01.jpg" alt="">
-                            </div>
-                            <div class="ms-3">
-                                <h6 class="mb-0">
-                                    {{ profile_user.username }}
-                                </h6>
 
-                            </div>
-                        </a>
-                        {% endwith %}
-                        {% else %}
-                        {% with profile_user=thread.first_person %}
-                        <a class="d-flex align-items-center mb-4" href="{% url 'profile' profile_user.profile.id %}">
+                        <a class="d-flex align-items-center mb-4" href="{% url 'profile' second_person.profile.id %}">
                             <div class="iq-profile-avatar status-online">
-                                {% if profile_user.profile.image %}
-                                <img class="rounded-circle avatar-50" src="{{profile_user.profile.image.url}}" alt="">
-                                {% else %}
                                 <img class="rounded-circle avatar-50" src="/static/images/user/default_profile.jpeg"
                                     alt="">
-                                {% endif %}
                             </div>
                             <div class="ms-3">
                                 <h6 class="mb-0">
-                                    {{ profile_user.username }}
+                                    {{ second_person.username }}
                                 </h6>
 
                             </div>
                         </a>
-                        {% endwith %}
-                        {% endif %}
+
+
 
                         <div class="card-body msg_card_body">
                             <!------- messages ------->
-                            {% for chat in thread.chatmessage_thread.all %}
+                            {% for chat in chat_messages %}
                             {% if chat.user == user %}
 
                             <div class="d-flex mb-4 replied">
@@ -91,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                {% endfor %}
+
                 <form class="email-form" id="send-message-form">
 
                     <div class="form-group row justify-content-end">
@@ -116,7 +92,120 @@
 {% endblock %}
 
 {% block extra_scripts %}
+<script>
+    let input_message = $("#input-message");
+    let message_body = $(".msg_card_body");
+    let send_message_form = $("#send-message-form");
+    const USER_ID = $("#logged-in-user").val();
 
-<script src="/static/js/messages.js"></script>
+    let loc = window.location;
+    let wsStart = "ws://";
+
+    if (loc.protocol === "https") {
+        wsStart = "wss://";
+    }
+
+    const thread_id = "{{ thread_id }}"; // Thread ID passed from Django context
+    const endpoint = `${wsStart}${loc.host}/ws/chat/${thread_id}/`;
+
+    var socket = new WebSocket(endpoint);
+
+    socket.onopen = async function (e) {
+        console.log("open", e);
+        send_message_form.on("submit", function (e) {
+            e.preventDefault();
+            let message = input_message.val();
+            let send_to = get_active_other_user_id();
+            console.log(send_to);
+
+            let data = {
+                message: message,
+                sent_by: USER_ID,
+                send_to: send_to,
+                thread_id: thread_id,
+            };
+            data = JSON.stringify(data);
+            socket.send(data);
+            $(this)[0].reset();
+        });
+    };
+
+    socket.onmessage = async function (e) {
+        console.log("message", e);
+        let data = JSON.parse(e.data);
+        let message = data["message"];
+        let sent_by_id = data["sent_by"];
+
+        newMessage(message, sent_by_id, thread_id);
+    };
+
+    socket.onerror = async function (e) {
+        console.log("error", e);
+    };
+
+    socket.onclose = async function (e) {
+        console.log("close", e);
+    };
+
+    function newMessage(message, sent_by_id, thread_id) {
+        if ($.trim(message) === "") {
+            return false;
+        }
+        let message_element;
+        let chat_id = "chat_" + thread_id;
+        if (sent_by_id == USER_ID) {
+            message_element = `
+			<div class="d-flex mb-4 replied">
+				<div class="msg_cotainer_send">
+					${message}
+    
+				</div>
+				<div class="img_cont_msg">
+					<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
+                                    class="rounded-circle user_img_msg">
+				</div>
+			</div>
+	    `;
+        } else {
+            message_element = `
+           <div class="d-flex mb-4 received">
+              <div class="img_cont_msg">
+                 <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
+              </div>
+              <div class="msg_cotainer">
+                 ${message}
+              
+              </div>
+           </div>
+        `;
+        }
+
+        let message_body = $(
+            '.messages-wrapper[chat-id="' + chat_id + '"] .msg_card_body'
+        );
+        message_body.append($(message_element));
+        message_body.animate(
+            {
+                scrollTop: $(document).height(),
+            },
+            100
+        );
+        input_message.val(null);
+    }
+
+    function get_active_other_user_id() {
+        let other_user_id = $(".messages-wrapper.is_active").attr("other-user-id");
+        other_user_id = $.trim(other_user_id);
+        console.log(other_user_id);
+        return other_user_id;
+    }
+
+    function get_active_thread_id() {
+        let chat_id = $(".messages-wrapper.is_active").attr("chat-id");
+        let thread_id = chat_id.replace("chat_", "");
+        return thread_id;
+    }
+
+</script>
 
 {% endblock %}

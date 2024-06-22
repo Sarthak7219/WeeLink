@@ -9,7 +9,9 @@ let wsStart = "ws://";
 if (loc.protocol === "https") {
   wsStart = "wss://";
 }
-let endpoint = wsStart + loc.host + loc.pathname;
+
+const thread_id = "{{ thread_id }}"; // Thread ID passed from Django context
+const endpoint = `${wsStart}${loc.host}/ws/chat/${thread_id}/`;
 
 var socket = new WebSocket(endpoint);
 
@@ -20,7 +22,6 @@ socket.onopen = async function (e) {
     let message = input_message.val();
     let send_to = get_active_other_user_id();
     console.log(send_to);
-    let thread_id = get_active_thread_id();
 
     let data = {
       message: message,
@@ -39,7 +40,7 @@ socket.onmessage = async function (e) {
   let data = JSON.parse(e.data);
   let message = data["message"];
   let sent_by_id = data["sent_by"];
-  let thread_id = data["thread_id"];
+
   newMessage(message, sent_by_id, thread_id);
 };
 
@@ -96,16 +97,6 @@ function newMessage(message, sent_by_id, thread_id) {
   );
   input_message.val(null);
 }
-
-$(".contact-li").on("click", function () {
-  $(".contacts .actiive").removeClass("active");
-  $(this).addClass("active");
-
-  // message wrappers
-  let chat_id = $(this).attr("chat-id");
-  $(".messages-wrapper.is_active").removeClass("is_active");
-  $('.messages-wrapper[chat-id="' + chat_id + '"]').addClass("is_active");
-});
 
 function get_active_other_user_id() {
   let other_user_id = $(".messages-wrapper.is_active").attr("other-user-id");

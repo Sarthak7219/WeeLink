@@ -13,8 +13,9 @@
    <link rel="stylesheet" href="/static/vendor/@fortawesome/fontawesome-free/css/all.min.css">
    <link rel="stylesheet" href="/static/vendor/remixicon/fonts/remixicon.css">
    <link rel="stylesheet" href="/static/vendor/vanillajs-datepicker/dist/css/datepicker.min.css">
-   <link rel="stylesheet" href="/static/vendor/font-awesome-line-awesome/css/all.min.css">
    <link rel="stylesheet" href="/static/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
+
+
    {% block extra_css %}
    {% endblock %}
 
@@ -45,11 +46,17 @@
                   </li>
 
                   <li class=" ">
-                     <a href="{% url 'chatroom' %}">
+                     {% if latest_message_thread_id %}
+                     <a href="{% url 'chatroom' latest_message_thread_id %}">
                         <i class="ri-mail-line"></i><span>Messages</span><i
                            class="ri-arrow-right-s-line iq-arrow-right"></i>
                      </a>
-
+                     {% else %}
+                     <a href="{% url 'chatroom' 0 %}">
+                        <i class="ri-mail-line"></i><span>Messages</span><i
+                           class="ri-arrow-right-s-line iq-arrow-right"></i>
+                     </a>
+                     {% endif %}
                   </li>
 
                </ul>
@@ -73,13 +80,16 @@
                      </div>
                   </div>
                </div>
-               <div class="iq-search-bar device-search">
-                  <form action="#" class="searchbox" method="get">
-                     <a class="search-link" href="#"><i class="ri-search-line"></i></a>
-                     <input type="text" class="text search-input" placeholder="Search profiles..." id="search-input">
+               <div class="iq-search-bar device-search" id="search-container">
+                  <form class="searchbox" method="get">
+                     <button class="search-link" type="submit" style="border: none;     background: transparent;
+"><i class="ri-search-line"></i></button>
+                     <input type="text" class="text search-input" placeholder="Search profiles..." id="search-input"
+                        name="username">
                   </form>
-                  <div id="search-results" class="list-group mt-2">
-
+                  <div id="search-results" class="list-group mt-2 ps-3" style="border: none;">
+                     {% block search_results %}
+                     {% endblock %}
                   </div>
                </div>
                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -97,77 +107,17 @@
 
 
                      <li class="nav-item dropdown">
-                        <a href="{% url 'chatroom' %}" class="dropdown-toggle" id="mail-drop" data-bs-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
+
+                        {% if latest_message_thread_id %}
+                        <a href="{% url 'chatroom' latest_message_thread_id %}" aria-expanded="false">
                            <i class="ri-mail-line"></i>
                         </a>
-                        <div class="sub-drop dropdown-menu" aria-labelledby="mail-drop">
-                           <div class="card shadow-none m-0">
-                              <div class="card-header d-flex justify-content-between bg-primary">
-                                 <div class="header-title bg-primary">
-                                    <h5 class="mb-0 text-white">All Message</h5>
-                                 </div>
-                                 <small class="badge bg-light text-dark">4</small>
-                              </div>
-                              <div class="card-body p-0 ">
-                                 <a href="#" class="iq-sub-card">
-                                    <div class="d-flex  align-items-center">
-                                       <div class="">
-                                          <img class="avatar-40 rounded" src="/static/images/user/01.jpg" alt="">
-                                       </div>
-                                       <div class=" w-100 ms-3">
-                                          <h6 class="mb-0 ">Bni Emma Watson</h6>
-                                          <small class="float-left font-size-12">13 Jun</small>
-                                       </div>
-                                    </div>
-                                 </a>
-                                 <a href="#" class="iq-sub-card">
-                                    <div class="d-flex align-items-center">
-                                       <div class="">
-                                          <img class="avatar-40 rounded" src="/static/images/user/02.jpg" alt="">
-                                       </div>
-                                       <div class="ms-3">
-                                          <h6 class="mb-0 ">Lorem Ipsum Watson</h6>
-                                          <small class="float-left font-size-12">20 Apr</small>
-                                       </div>
-                                    </div>
-                                 </a>
-                                 <a href="#" class="iq-sub-card">
-                                    <div class="d-flex align-items-center">
-                                       <div class="">
-                                          <img class="avatar-40 rounded" src="/static/images/user/03.jpg" alt="">
-                                       </div>
-                                       <div class="ms-3">
-                                          <h6 class="mb-0 ">Why do we use it?</h6>
-                                          <small class="float-left font-size-12">30 Jun</small>
-                                       </div>
-                                    </div>
-                                 </a>
-                                 <a href="#" class="iq-sub-card">
-                                    <div class="d-flex align-items-center">
-                                       <div class="">
-                                          <img class="avatar-40 rounded" src="/static/images/user/04.jpg" alt="">
-                                       </div>
-                                       <div class="ms-3">
-                                          <h6 class="mb-0 ">Variations Passages</h6>
-                                          <small class="float-left font-size-12">12 Sep</small>
-                                       </div>
-                                    </div>
-                                 </a>
-                                 <a href="#" class="iq-sub-card">
-                                    <div class="d-flex align-items-center">
-                                       <div class="">
-                                          <img class="avatar-40 rounded" src="/static/images/user/05.jpg" alt="">
-                                       </div>
-                                       <div class="ms-3">
-                                          <h6 class="mb-0 ">Lorem Ipsum generators</h6>
-                                          <small class="float-left font-size-12">5 Dec</small>
-                                       </div>
-                                    </div>
-                                 </a>
-                              </div>
-                           </div>
-                        </div>
+                        {% else %}
+                        <a href="{% url 'chatroom' 0 %}" aria-expanded="false">
+                           <i class="ri-mail-line"></i>
+                        </a>
+                        {% endif %}
+
                      </li>
                      <li class="nav-item dropdown">
                         <a href="#" class="   d-flex align-items-center dropdown-toggle" id="drop-down-arrow"
@@ -204,7 +154,7 @@
                                        </div>
                                     </div>
                                  </a>
-                                 <a href="../app/profile-edit.html" class="iq-sub-card iq-bg-warning-hover">
+                                 <a href="#" class="iq-sub-card iq-bg-warning-hover">
                                     <div class="d-flex align-items-center">
                                        <div class="rounded card-icon bg-soft-warning">
                                           <i class="ri-profile-line"></i>
@@ -233,7 +183,7 @@
 
       <div class="right-sidebar-mini right-sidebar">
          <div class="right-sidebar-panel p-0">
-            <h4 class="mt-2 mb-3 ms-2">Messages</h4>
+            <h4 style="padding: 0.938rem 1.25rem;">Messages</h4>
             {% if messages %}
             <ul class="messages p-1 bg-soft-primary br-5 rounded">
                {% for message in messages %}
@@ -249,8 +199,7 @@
                      <!-- Display all the profile followed by the user -->
                      {% if Threads %}
                      {% for thread in Threads %}
-                     <a href="{% url 'chatroom'  %}" class="{% if forloop.first %}active{% endif %} contact-li"
-                        chat-id="chat_{{ thread.id }}">
+                     <a href="{% url 'chatroom' thread.id %}" class="active contact-li" chat-id="chat_{{ thread.id }}">
                         <div class="d-flex align-items-center mb-4">
                            <div class="iq-profile-avatar status-online">
                               {% if thread.first_person == user %}
@@ -322,9 +271,9 @@
    </footer> <!-- Backend Bundle JavaScript -->
 
 
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
    <script src="/static/js/libs.min.js"></script>
    <!-- slider JavaScript -->
    <script src="/static/js/slider.js"></script>
@@ -335,11 +284,11 @@
    <!-- SweetAlert JavaScript -->
    <script src="/static/js/sweetalert.js"></script>
    <!-- app JavaScript -->
-   <script src="/static/js/charts/weather-chart.js"></script>
+
    <script src="/static/js/app.js"></script>
-   <script src="../vendor/vanillajs-datepicker/dist/js/datepicker.min.js"></script>
    <script src="/static/js/lottie.js"></script>
    <script src="/static/js/search-profiles.js"></script>
+
    {% block extra_scripts %}
    {% endblock %}
 

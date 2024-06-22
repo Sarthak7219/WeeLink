@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from chat.models import Thread
 
 
 
@@ -10,10 +11,11 @@ def home(request):
 
     user_profile = request.user.profile
     user_followed_profiles = user_profile.follows.exclude(pk=user_profile.pk)
+    user_followed_users = user_followed_profiles.values_list('user', flat=True)
+    
+    all_posts = Post.objects.filter(user__in=user_followed_users).order_by('-created_at')
 
 
-
-    all_posts = Post.objects.all().order_by('-created_at')
 
     context = {
         'user_followed_profiles' :user_followed_profiles,
@@ -55,11 +57,21 @@ def profile_view(request, id):
     user_followed_profiles = user_profile.follows.exclude(pk=user_profile.pk)
     posts = profile.user.post.all().order_by('-created_at')
 
+    
+
     profile_pic_url = "/static/images/user/default_profile.jpeg"
     if profile.image:
         profile_pic_url = profile.image.url
 
     profile_post_images = Image.objects.filter(post__user=profile.user)
+
+
+    thread, created = Thread.objects.get_or_create(
+        first_person= request.user,
+        second_person= profile.user
+    )
+
+
 
     context = {
         'profile':profile,
@@ -69,11 +81,12 @@ def profile_view(request, id):
         'connected_profiles':connected_profiles,
         'following' : followed_profiles.count(),
         'followers' : followed_by.count(),
+        'num_posts':posts.count(),
         'user_followed_profiles':user_followed_profiles,
         'posts': posts,
         'is_user': is_user,
         'profile_post_images':profile_post_images,
-
+        'thread_id': thread.id,
     }
     return render(request, 'profile.html', context)
 
@@ -134,5 +147,13 @@ def addLike(request, post_id):
 @login_required
 def profile_search(request):
     profiles = Profile.objects.all()
-    profile_list = list(profiles.values('id', 'user__username'))  # Note the double underscore
+    profile_list = []
+    for profile in profiles:
+        profile_list.append({
+            'id': profile.id,
+            'username': profile.user.username,
+            'image_url': profile.image.url if profile.image else '/static/images/user/default_profile.jpeg'
+        })
     return JsonResponse({'profiles': profile_list})
+
+

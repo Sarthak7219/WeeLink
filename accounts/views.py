@@ -43,14 +43,20 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.info(request, "Successfully Logged In!")
+
+            if request.POST.get('remember'):
+                request.session.set_expiry(1209600)
+            else:
+                request.session.set_expiry(0)
             return redirect('home')
         
         else:
             error_message = "Invalid username or password"
             return render(request, 'accounts/login.html', {'error_message':error_message})
 
+    context= {}
     
-    return render(request, 'accounts/login.html')
+    return render(request, 'accounts/login.html', context)
 
 
 def logout_view(request):
