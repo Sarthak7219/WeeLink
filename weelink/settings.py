@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 
+import environ
+import dj_database_url
+env = environ.Env()
+environ.Env.read_env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,9 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2apmb@wxdeh_qj@3x9p=aav^tl1eh2bc2qz(r-%4lrb-j7k$qg'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', '.onrender.com', '127.0.0.1']
+
 
 
 # Application definition
@@ -93,16 +99,25 @@ ASGI_APPLICATION = 'weelink.asgi.application'
 # }
 
 # Deployment database
+
+
+database_url = os.environ.get('DATABASE_URL')
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'OAyuPMgOPOEtUtqsgXKjFNbRQFdVZMTz',
-        'HOST': 'roundhouse.proxy.rlwy.net',
-        'PORT': '56979',
-    }
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'railway',
+#         'USER': 'postgres',
+#         'PASSWORD': 'OAyuPMgOPOEtUtqsgXKjFNbRQFdVZMTz',
+#         'HOST': 'roundhouse.proxy.rlwy.net',
+#         'PORT': '56979',
+#     }
+# }
+
+
 
 
 # Password validation
