@@ -1,5 +1,5 @@
 from chat.models import Thread
-
+from django.db.models import Q
 
 def base_template_data(request):
 
@@ -11,18 +11,28 @@ def base_template_data(request):
             latest_message = thread.chatmessage_thread.order_by('-timestamp').first()
             if latest_message:
                 thread.latest_message = latest_message.message[:15] + '...' if len(latest_message.message) > 15 else latest_message.message
-                latest_message_thread_id = latest_message.thread.id
+                
             else:
                 thread.latest_message = None
-                latest_message_thread_id = 0
+                
 
+        current_user = request.user
+    
+        
+        latest_thread = Thread.objects.filter(
+            Q(first_person=current_user) | Q(second_person=current_user)
+        ).latest('timestamp')
 
+        if latest_thread:
+            latest_thread_id = latest_thread.id
+        else:
+            latest_thread_id=0
 
         
         
         context = {
             'Threads': threads,
-            'latest_message_thread_id':latest_message_thread_id
+            'latest_thread_id':latest_thread_id
         }
         return context
     

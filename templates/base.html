@@ -46,8 +46,8 @@
                   </li>
 
                   <li class=" ">
-                     {% if latest_message_thread_id %}
-                     <a href="{% url 'chatroom' latest_message_thread_id %}">
+                     {% if latest_thread_id %}
+                     <a href="{% url 'chatroom' latest_thread_id %}">
                         <i class="ri-mail-line"></i><span>Messages</span><i
                            class="ri-arrow-right-s-line iq-arrow-right"></i>
                      </a>
@@ -108,8 +108,8 @@
 
                      <li class="nav-item dropdown">
 
-                        {% if latest_message_thread_id %}
-                        <a href="{% url 'chatroom' latest_message_thread_id %}" aria-expanded="false">
+                        {% if latest_thread_id %}
+                        <a href="{% url 'chatroom' latest_thread_id %}" aria-expanded="false">
                            <i class="ri-mail-line"></i>
                         </a>
                         {% else %}

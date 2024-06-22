@@ -46,9 +46,13 @@
                      </ul>
                   </div>
                   {% if not is_user %}
+
                   <div class="d-flex">
-                     <a href="{% url 'chatroom' thread_id  %}" class="btn btn-success d-block mt-3 me-3"
+
+                     {% if profile in user_followed_profiles %}
+                     <a href="{% url 'create_thread' profile.id  %}" class="btn btn-success d-block mt-3 me-3"
                         id="message-btn" data-user-id="{{ profile.user.id }}" style="color: #fff;">Message</a>
+                     {% endif %}
                      <form method="post">
                         {% csrf_token %}
 

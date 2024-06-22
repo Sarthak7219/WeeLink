@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from chat.models import Thread
+from django.contrib import messages
 
 
 
@@ -10,12 +10,12 @@ from chat.models import Thread
 def home(request):
 
     user_profile = request.user.profile
-    user_followed_profiles = user_profile.follows.exclude(pk=user_profile.pk)
+    user_followed_profiles = user_profile.follows.all()
     user_followed_users = user_followed_profiles.values_list('user', flat=True)
     
     all_posts = Post.objects.filter(user__in=user_followed_users).order_by('-created_at')
 
-
+    user_followed_profiles = user_profile.follows.exclude(pk=user_profile.pk)
 
     context = {
         'user_followed_profiles' :user_followed_profiles,
@@ -66,10 +66,7 @@ def profile_view(request, id):
     profile_post_images = Image.objects.filter(post__user=profile.user)
 
 
-    thread, created = Thread.objects.get_or_create(
-        first_person= request.user,
-        second_person= profile.user
-    )
+    
 
 
 
@@ -86,7 +83,6 @@ def profile_view(request, id):
         'posts': posts,
         'is_user': is_user,
         'profile_post_images':profile_post_images,
-        'thread_id': thread.id,
     }
     return render(request, 'profile.html', context)
 
