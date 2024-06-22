@@ -4,7 +4,7 @@ from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
 from chat.models import Thread, ChatMessage
 
-User = get_user_model()
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def websocket_connect(self, event):
@@ -69,6 +69,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_user_object(self, user_id):
+        User = get_user_model()
         return User.objects.filter(id=user_id).first()
 
     @database_sync_to_async
