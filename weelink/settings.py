@@ -22,6 +22,7 @@ DEBUG = os.environ.get('DEBUG')
 # DEBUG = False
 
 ALLOWED_HOSTS = ['*', '.onrender.com', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ["https://weelink.onrender.com","http://localhost:8000"]
 
 
 
