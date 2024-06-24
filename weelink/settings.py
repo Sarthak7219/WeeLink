@@ -195,3 +195,15 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://default:kIxFUNukMANrLZtmJowPQDkHYZpNTvep@monorail.proxy.rlwy.net:21756',  # Adjust the location if Redis is running elsewhere
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+CACHE_TTL = 60 * 15

@@ -4,10 +4,12 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UpdateProfileForm, UpdateUserForm
+from django.views.decorators.cache import cache_page
 
 
 
 @login_required
+@cache_page(60 * 15)
 def home(request):
 
     user_profile = request.user.profile
@@ -27,6 +29,7 @@ def home(request):
 
 
 @login_required
+@cache_page(60 * 15)
 def profile_view(request, id):
 
     is_user = False

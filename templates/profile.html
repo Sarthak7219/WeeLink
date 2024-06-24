@@ -19,7 +19,10 @@
                <div class="user-detail text-center mb-3">
                   <div class="profile-img">
 
-                     <img src="{{profile_pic_url}}" alt="profile-img" class="avatar-130 img-fluid" />
+                     <img src="{{profile_pic_url}}" alt="profile-img" class="avatar-130 img-fluid" style=" width: 127.5px;
+                     height: 127.5px;
+                     max-width: none;
+                     object-fit: cover; margin: auto;">
 
                   </div>
                   <div class="profile-detail">
@@ -373,7 +376,7 @@
 
                                                 <img
                                                    src="{% if profile.image %}{{profile.image.url}}{% else %}/static/images/user/default_profile.jpeg{% endif %}"
-                                                   alt="profile-img" class="img-fluid" style="    width: 127.5px;
+                                                   alt="profile-img" class="img-fluid" style=" width: 127.5px;
                                                    height: 127.5px;
                                                    max-width: none;
                                                    object-fit: cover;">

@@ -47,7 +47,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post')
     body = models.CharField(null=True, blank=True, max_length=140)
     created_at = models.DateTimeField(auto_now_add=True)
-    likes = models.ManyToManyField(User, null=True,blank=True, related_name='likes')
+    likes = models.ManyToManyField(User, blank=True, related_name='likes')
 
     def __str__(self):
         body_preview = self.body[:30] + "..." if self.body else "" 

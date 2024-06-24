@@ -24302,3 +24302,7 @@ a{
 #profile_img{
   display: none;
 }
+
+img{
+  display: block !important;
+}
