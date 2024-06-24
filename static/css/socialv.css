@@ -24295,3 +24295,10 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
     content: none;
 }
 
+a{
+  cursor: pointer;
+}
+
+#profile_img{
+  display: none;
+}

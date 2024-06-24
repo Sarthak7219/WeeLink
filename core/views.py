@@ -3,6 +3,7 @@ from .models import *
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .forms import UpdateProfileForm, UpdateUserForm
 
 
 
@@ -65,11 +66,6 @@ def profile_view(request, id):
 
     profile_post_images = Image.objects.filter(post__user=profile.user)
 
-
-    
-
-
-
     context = {
         'profile':profile,
         'profile_pic_url':profile_pic_url,
@@ -85,6 +81,35 @@ def profile_view(request, id):
         'profile_post_images':profile_post_images,
     }
     return render(request, 'profile.html', context)
+
+
+def update_profile(request):
+
+    profile_form = UpdateProfileForm(instance=request.user.profile)
+    user_form = UpdateUserForm(instance=request.user)
+
+    if request.method == "POST":
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('profile', id=request.user.profile.id)
+        
+        else: 
+            print(user_form.errors)
+            print(profile_form.errors)
+            profile_form = UpdateProfileForm(instance=request.user.profile)
+            user_form = UpdateUserForm(instance=request.user)
+
+    context = {
+        'profile_form':profile_form,
+        'user_form':user_form
+    }
+
+    return render(request, 'profile-edit.html', context)
 
 
 @login_required
@@ -137,6 +162,20 @@ def addLike(request, post_id):
     else:
         post.likes.add(user)
 
+    return redirect('home')
+
+
+@login_required
+def create_comment(request, post_id):
+    if request.method == "POST":
+        comment_text = request.POST.get('comment')
+        if comment_text:
+            Comment.objects.create(
+                comment=comment_text,
+                post = Post.objects.get(id =post_id),
+                author = request.user
+            )
+            return redirect('home')
     return redirect('home')
 
 

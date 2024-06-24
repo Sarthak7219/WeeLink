@@ -1,20 +1,31 @@
 # your_app/forms.py
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser
+from .models import Profile
+from django.contrib.auth.models import User
 
-class CustomUserCreationForm(UserCreationForm):
+
+class UpdateUserForm(forms.ModelForm):
+
+    first_name = forms.CharField(max_length=100,
+                               required=True,
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(max_length=100,
+                               required=True,
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+    
     class Meta:
-        model = CustomUser
-        fields = ('username', 'email', 'full_name')
+        model = User
+        fields = ['first_name', 'username']
 
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if CustomUser.objects.filter(email=email).exists():
-            raise forms.ValidationError("Email already exists")
-        return email
 
-class CustomUserChangeForm(UserChangeForm):
+class UpdateProfileForm(forms.ModelForm):
+    image = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control-file', 'id' : 'profile_img'}))
+    age = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    bio = forms.CharField(
+        max_length=150,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'cols': 40})
+    )
+
     class Meta:
-        model = CustomUser
-        fields = ('username', 'email', 'full_name')
+        model = Profile
+        fields = ['image', 'age', 'bio']

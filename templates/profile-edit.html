@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="iq-edit-list-data">
+            <div class="tab-content">
+                <div class="tab-pane fade active show" id="personal-information" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-title">
+                                <h4 class="card-title">Personal Information</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group row align-items-center">
+                                    <div class="col-md-12">
+                                        {{profile_form.image.errors}}
+                                        <label class="profile-img-edit" for="profile_img">
+
+                                            <img class="profile-pic" src="{{request.user.profile.get_profile_pic_url}}"
+                                                alt="profile-pic"
+                                                style="object-fit: cover; height: 150px; width: 150px;">
+                                            <div class="p-image">
+                                                <i class="ri-pencil-line upload-button text-white"></i>
+                                                {{profile_form.image}}
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class=" row align-items-center">
+                                    {{user_form.first_name.errors}}
+                                    <div class="form-group col-sm-6">
+                                        <label for="first_name" class="form-label">Fullname</label>
+                                        {{user_form.first_name}}
+                                    </div>
+
+                                    {{user_form.username.errors}}
+                                    <div class="form-group col-sm-6">
+                                        <label for="username" class="form-label">Username:</label>
+                                        {{user_form.username}}
+                                    </div>
+
+                                    {{profile_form.bio.errors}}
+                                    <div class="form-group col-sm-6">
+                                        <label for="bio" class="form-label">Bio :</label>
+                                        {{profile_form.bio}}
+                                    </div>
+
+                                    {{profile_form.age.errors}}
+                                    <div class="form-group col-sm-6">
+                                        <label class="form-label" for="age">Age:</label>
+                                        {{profile_form.age}}
+                                    </div>
+
+
+
+                                </div>
+                                <button type="submit" class="btn btn-primary me-2">Submit</button>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

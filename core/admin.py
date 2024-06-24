@@ -29,6 +29,8 @@ class CustomUserAdmin(UserAdmin, nested_admin.NestedModelAdmin):
 admin.site.unregister(User)
 admin.site.unregister(Group)
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(Comment)
+
 # admin.site.register(Post)
 
 

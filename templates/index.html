@@ -33,7 +33,7 @@
                         </div>
                         <hr>
                         <ul class=" post-opt-block d-flex list-inline m-0 p-0 flex-wrap">
-                            <input type="file" id="post-image" name="post-image" id="post-image" accept="image/*">
+                            <input type="file" id="post-image" name="post-image" accept="image/*">
                             <label for="post-image"
                                 class="bg-soft-primary rounded p-2 pointer d-flex align-items-center me-3 mb-md-0 mb-2">
 
@@ -115,18 +115,51 @@
 
                                     </div>
                                 </div>
-                                <div class="total-comment-block">
+                                <a class="total-comment-block" href="#comment-box-{{post.id}}" data-bs-toggle="collapse"
+                                    class="collapsed" aria-expanded="false">
 
                                     <span>
-                                        20 Comment
+                                        {% if post.comments.count == 1 %}
+                                        1 comment
+                                        {% else %}
+                                        {{post.comments.count}} comments
+                                        {% endif %}
                                     </span>
 
 
-                                </div>
+                                </a>
                             </div>
 
                         </div>
                         <hr>
+                        <ul class="post-comments list-inline p-0 m-0 collapse" id="comment-box-{{post.id}}"
+                            data-bs-parent="#iq-sidebar-toggle">
+                            {% for comment in post.comments.all %}
+                            <li class="mb-3">
+                                <div class="d-flex">
+                                    <div class="user-img">
+                                        <img src="{{comment.author.profile.get_profile_pic_url}}" alt="userimg"
+                                            class="avatar-35 rounded-circle img-fluid">
+                                    </div>
+                                    <div class="comment-data-block ms-3">
+                                        <h6>{{commment.author.username}}</h6>
+                                        <p class="mb-0">{{comment.comment}}</p>
+                                    </div>
+                                </div>
+                            </li>
+
+                            {% empty %}
+                            <li>
+                                <p>No comments</p>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <form class="comment-text d-flex align-items-center mt-3"
+                            action="{% url 'create_comment' post.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="text" class="form-control rounded" placeholder="Enter Your Comment"
+                                name="comment">
+                        </form>
 
 
                     </div>

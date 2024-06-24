@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',
     'channels',
     'chat',
+    'channels_redis',
     
 ]
 
@@ -190,7 +191,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [('redis://default:kIxFUNukMANrLZtmJowPQDkHYZpNTvep@monorail.proxy.rlwy.net:21756')],
         },
     },
 }

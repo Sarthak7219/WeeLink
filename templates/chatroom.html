@@ -122,6 +122,26 @@
             let send_to = get_active_other_user_id();
             console.log(send_to);
 
+            let message_body = $(
+                '.messages-wrapper[chat-id="chat_' + thread_id + '"] .msg_card_body'
+            );
+
+            let temp_message_element = `
+                <div class="d-flex mb-4 replied temp-sending">
+                    <div class="msg_cotainer_send" style="background:none;color: #777d74;">
+                        Sending...
+                    </div>
+                </div>
+            `;
+
+            message_body.append($(temp_message_element));
+            message_body.animate(
+                {
+                    scrollTop: $(document).height(),
+                },
+                100
+            );
+
             let data = {
                 message: message,
                 sent_by: USER_ID,
@@ -139,6 +159,8 @@
         let data = JSON.parse(e.data);
         let message = data["message"];
         let sent_by_id = data["sent_by"];
+
+        $(".temp-sending").remove();
 
         newMessage(message, sent_by_id, thread_id);
     };
@@ -165,7 +187,7 @@
     
 				</div>
 				<div class="img_cont_msg">
-					<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
+					<img src="/static/images/user/default_profile.jpeg"
                                     class="rounded-circle user_img_msg">
 				</div>
 			</div>
@@ -174,7 +196,7 @@
             message_element = `
            <div class="d-flex mb-4 received">
               <div class="img_cont_msg">
-                 <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
+                 <img src="/static/images/user/default_profile.jpeg" class="rounded-circle user_img_msg">
               </div>
               <div class="msg_cotainer">
                  ${message}

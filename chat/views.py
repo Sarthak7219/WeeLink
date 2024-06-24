@@ -4,7 +4,7 @@ from django.contrib import messages
 from core.views import Profile
 from .models import Thread
 
-from django.db.models import Q
+
 
 
 # Create your views here.
@@ -51,10 +51,12 @@ def create_thread(request, profile_id):
     
     user_followed_profiles = user_profile.follows.exclude(pk=user_profile.pk)
 
+    
+
     if profile in user_followed_profiles:
-        thread, created = Thread.objects.get_or_create(
-            first_person= request.user,
-            second_person= profile.user
+        thread, created = Thread.objects.get_or_create_thread(
+            request.user,
+            profile.user
         )
         thread_id=thread.id
     else:

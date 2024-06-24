@@ -22,13 +22,20 @@ class Profile(models.Model):
     user = models.OneToOneField(User, models.CASCADE)   #no need to write related name for one to one field, django by defauls creates a relation using the lowercase letter of the class(Profile) so we can use the user.profile
     age = models.IntegerField(null=True, blank=True)
     image = models.ImageField(blank=True, null=True, upload_to="images/profile/")
-    # bio = models.TextField(null=True, blank=True, max_length=150)
+    bio = models.TextField(null=True, blank=True, max_length=150)
     follows = models.ManyToManyField(
         "self",
         related_name="followed_by",
         symmetrical=False,
         blank=True
     )
+
+    def get_profile_pic_url(self):
+        if self.image:
+            return self.image.url
+        else:
+            return "/static/images/user/default_profile.jpeg"
+
 
     def __str__(self):
         return self.user.username
@@ -49,6 +56,18 @@ class Post(models.Model):
             f"({self.created_at:%Y-%m-%d %H:%M}): "
             f"{body_preview}"
         )
+    
+
+
+class Comment(models.Model):
+    comment = models.CharField(max_length=150)
+    created_on = models.DateTimeField(auto_now_add=True)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return f'{self.author.username} : {self.comment[:30]}'
 
 
 

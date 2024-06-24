@@ -10,8 +10,8 @@
                <div class="position-relative">
                   <img src="/static/images/page-img/profile-bg1.jpg" alt="profile-bg" class="rounded img-fluid">
                   {% if is_user == True %}
-                  <ul class="header-nav list-inline d-flex flex-wrap justify-end p-0 m-0">
-                     <li><a href="#"><i class="ri-pencil-line"></i></a></li>
+                  <ul class="header-nav list-inline d-flex flex-wrap justify-end p-0 m-0" style="z-index: 100;">
+                     <li><a href="{% url 'update_profile' %}"><i class="ri-pencil-line"></i></a></li>
                      <li><a href="#"><i class="ri-settings-4-line"></i></a></li>
                   </ul>
                   {% endif %}
