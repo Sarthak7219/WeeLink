@@ -85,20 +85,20 @@ WSGI_APPLICATION = 'weelink.wsgi.application'
 
 
 # Development database
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # Deployment database
 
 
-database_url = os.environ.get('DATABASE_URL')
-DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
-}
+# database_url = os.environ.get('DATABASE_URL')
+# DATABASES = {
+#     'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+# }
 
 # DATABASES = {
 #     'default': {
@@ -191,7 +191,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [('redis://default:kIxFUNukMANrLZtmJowPQDkHYZpNTvep@monorail.proxy.rlwy.net:21756')],
+            "hosts": [('rediss://red-ctabn156l47c73bl05ig:lmVZVHd5RYV4uuedF4vLGp1QsVDQvKlu@oregon-redis.render.com:6379')],
         },
     },
 }
@@ -199,7 +199,7 @@ CHANNEL_LAYERS = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://default:kIxFUNukMANrLZtmJowPQDkHYZpNTvep@monorail.proxy.rlwy.net:21756',  # Adjust the location if Redis is running elsewhere
+        'LOCATION': 'rediss://red-ctabn156l47c73bl05ig:lmVZVHd5RYV4uuedF4vLGp1QsVDQvKlu@oregon-redis.render.com:6379',  # Adjust the location if Redis is running elsewhere
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
